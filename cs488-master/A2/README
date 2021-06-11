@@ -1,0 +1,19 @@
+# Compilation
+
+There are no changes relative to the default gmake/make combination.
+
+# Manual
+
+The "more cubes" check box renders multiple copies of the cube at fixed offsets. This is useful for checking linear perspective.
+
+The cube wires are rendered as white, fading to the background depending on their z value. This z value only accounts for model rotations.
+
+# Limitations
+
+Because the shading has to set the colour of an entire line, the shaded value is generally discontinuous at vertices. Do not stare too long at vertices. All copies of cubes are shaded identically.
+
+The TR matrices are not guaranteed to remain orthogonal due to accumulated fp rounding errors. Rotating the cube for a few hours will cause the cube to look skewed.
+
+# Machine used
+
+29

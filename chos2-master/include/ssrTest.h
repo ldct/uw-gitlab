@@ -1,0 +1,1 @@
+void ssr_test_main();

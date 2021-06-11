@@ -1,0 +1,19 @@
+#ifndef HUD_H
+#define HUD_H
+
+
+#define SENSOR_LINENUM 1
+#define UPTIME_LINENUM 2
+#define FPS_LINENUM 3
+#define SWITCH_LINENUM 4
+#define TRAINSERVER_LINENUM 5
+#define TRAINSERVER_LINENUM2 6
+#define UTILTIME_LINENUM 7
+#define TRAIN_GUI_LINENUM 8
+
+#define CLI_DEBUG_LINENUM 18
+#define CLI_INPUT_LINENUM 19
+#define SCROLL_START 20
+#define SCROLL_END 50
+
+#endif

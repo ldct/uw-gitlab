@@ -1,0 +1,8 @@
+// https://www.techiedelight.com/pairs-shortest-paths-floyd-warshall-algorithm/
+// https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/
+// https://rosettacode.org/wiki/Linear_congruential_generator#C
+// https://stackoverflow.com/a/240370
+// https://codeforwin.org/2015/07/c-program-to-sort-array-in-ascending-order.html
+// https://stackoverflow.com/questions/34873209/implementation-of-strcmp
+// https://code.woboq.org/userspace/glibc/string/test-strlen.c.htmlsize_t
+// https://stackoverflow.com/questions/22977859/reversing-an-array-in-place

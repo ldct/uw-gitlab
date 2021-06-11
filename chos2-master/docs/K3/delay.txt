@@ -1,0 +1,43 @@
+time=0  	tId=5
+time=0  	tId=6
+time=0  	tId=7
+time=0  	tId=8
+time=10  	tId=5
+time=20  	tId=5
+time=23  	tId=6
+time=30  	tId=5
+time=33  	tId=7
+time=40  	tId=5
+time=46  	tId=6
+time=50  	tId=5
+time=60  	tId=5
+time=66  	tId=7
+time=69  	tId=6
+time=70  	tId=5
+time=71  	tId=8
+time=80  	tId=5
+time=90  	tId=5
+time=92  	tId=6
+time=99  	tId=7
+time=100  	tId=5
+time=110  	tId=5
+time=115  	tId=6
+time=120  	tId=5
+time=130  	tId=5
+time=132  	tId=7
+time=138  	tId=6
+time=140  	tId=5
+time=142  	tId=8
+time=150  	tId=5
+time=160  	tId=5
+time=161  	tId=6
+time=165  	tId=7
+time=170  	tId=5
+time=180  	tId=5
+time=184  	tId=6
+time=190  	tId=5
+time=198  	tId=7 	 done
+time=200  	tId=5 	 done
+time=207  	tId=6 	 done
+time=213  	tId=8 	 done
+

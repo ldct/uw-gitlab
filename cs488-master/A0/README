@@ -1,0 +1,25 @@
+# Compilation
+
+There are no changes relative to the default premake4/make combination. Hence, from the directory where this README exists, the following steps build and run the program.
+
+```
+cd ..
+premake4 gmake
+make
+cd -
+premake4 gmake
+make
+./A0
+```
+
+# Manual
+
+The CLI will signal if an unrecognized key is pressed.
+
+In the UI for controlling the rotation angle, the angle is given in radians between 0 and 2π.
+
+The program is tested with an OS-level dvorak keyboard (Ubuntu and Ubuntu-on-WSL), but the keys specified in the assignment only work with the unmapped qwerty keys.
+
+Pressing the key that has "+" printed on it interpreted as a "+" command, regardless of whether the shift key is currently pressed.
+
+The scale-up command increases the linear scale of the shape by 10%, and the scale-down command decreases the linear scale by 10%.

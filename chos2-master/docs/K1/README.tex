@@ -1,0 +1,141 @@
+\listfiles
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage[]{algorithm2e}
+
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\E}{E}
+\def\Z{\mathbb{Z}}
+\def\N{\mathbb{N}}
+\def\R{\mathbb{R}}
+\def\Q{\mathbb{Q}}
+\def\K{\mathbb{K}}
+\def\T{\mathbb{T}}
+\def\O{\mathcal{O}}
+\def\B{\mathcal{B}}
+\def\XX{\mathfrak{X}}
+\def\YY{\mathfrak{Y}}
+\def\AA{\mathfrak{A}}
+\def\ZZ{\mathfrak{Z}}
+\def\BB{\mathcal{B}}
+\def\UU{\mathcal{U}}
+\def\MM{\mathcal{M}}
+\def\M{\mathfrak{M}}
+\def\l{\lambda}
+\def\L{\Lambda}
+\def\<{\langle}
+\def\>{\rangle}
+
+\usepackage[a4paper,margin=1in]{geometry}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1em}
+
+\title{CS 450 Assignment K1}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section*{1. How To Operate Program}
+
+The .elf artifact is committed in the git repository at https://git.uwaterloo.ca/f5fei/chos. See section 4 for a link to the code repsoitory. Alternatively see section 5 for instructions to build from source. Once the artifact is obtained, load it into redboot and run \texttt{go}.
+
+\section*{2. Group Member Names}
+
+Xuanji Li
+
+Lennox Fei
+
+\section*{3. Kernel Structure}
+
+\subsection*{Context Switch}
+
+Context switch from user mode to kernel is done by the \texttt{SWI <n>} instruction, where \texttt{<n>} specifies which syscall should be made, and context switch from kernel to user mode is done by restoring a saved user mode CPSR register from memory which sets the processor mode to user mode.
+
+At startup, the \texttt{setUpSWIHandler} handler function is used to install the \texttt{sys\_handler} as the handler for \texttt{SWI}. This is done by writing the absolute address of \texttt{sys\_handler} to \texttt{0x28} and the instruction \texttt{LDR pc, [pc, \#0x18]} to \texttt{0x08}. \texttt{sys\_handler} expects to be in svc mode, with the sp pointing to a trap frame with the saved kernel context. It
+
+\begin{enumerate}
+\item Get the exact \texttt{SWI} instruction and pass it to the kernel syscall handling system
+\item Get the user mode sp and write it to the current TD
+\item Restore kernel context from the trap frame
+\end{enumerate}
+
+The kernel syscall handling system is responsibe for removing syscall arguments from the stack and doing the call (e.g. creating a new task) and writing the syscall return value into the task's memory.
+
+When a syscall is made from the user side, the following steps are taken:
+
+\begin{enumerate}
+\item User context is saved on the stack as a trap frame, with a modified PC
+\item Syscall arguments are pushed onto the stack
+\item \texttt{SWI <n>}
+\end{enumerate}
+
+Modified PC: the PC saved in the trap frame is the instruction after the SWI, instead of the PC at the time when the trap frame is created.
+
+Within the kernel, a loop runs the next available task by switching from kernel to user. The SWI handler returns control to immediately after, i.e., into a new iteration of the loop. The switch from kernel to user does:
+
+\begin{enumerate}
+\item Save kernel context onto a trap frame, with modified PC
+\item Restore user context (including CPSR)
+\end{enumerate}
+
+\subsection*{Task Descriptors}
+
+Task descriptors are stored a struct with the TID, the parent TID, the task priority, the current status of a task, the stack base, and the task stack entry. The stack base is declared as \texttt{char STACK[STACK\_SIZE]}. Since the TDs have static storage (via the global scheduler variable), the compiler allocates \texttt{STACK\_SIZE} worth of space within the struct. We use the task status for the indication of status exit.
+
+\subsection*{Task Initialization}
+
+When a task is created (e.g. first user task or via \texttt{Create}), we initialize the memory by creating an appropriate trap frame and stack entry. The appropriate trap frame has slots that are reloaded into registers. The slot corresponding to pc contains the beginning of the requested user function, and the one corresponding to LR gets a pointer to the Exit user-side syscall, so the user automatically exits their program without the need for a manual exit call. The slot corresponding to SP is set to the stack address after the trap frame has been pushed onto it; similarly for the stack entry.
+
+\subsection*{Scheduling}
+
+The TDs are stored in a priority queue (keyed with task priority). This allows large ints for the priority without using separate queues for each possible priority. We force same keys to continue bubbling down in the priority queue so that rescheduled tasks are added ``to the end of the queue'' of tasks at the same priority.
+
+\section*{4. Code repository}
+
+https://git.uwaterloo.ca/f5fei/chos
+
+\section*{5. Build and Execution}
+
+When you are in the root directory of the repo (chos/), run the following commands
+
+make
+
+make install
+
+Make should build everything, and make install will move it to \texttt{ARM/[uwid]}, this allows for parallel testing.
+In case you get issues with missing linker libraries, do the following to regenerate the symbol link
+
+cd lib
+./rebuildLib.sh
+
+\section*{6. Output and explanation}
+
+\begin{verbatim}
+Created: 2
+Created: 3
+4 1
+4 1
+Created: 4
+5 1
+5 1
+Created: 5
+FirstUserTask: Exit
+2 1
+3 1
+2 1
+3 1
+\end{verbatim}
+
+The first two tasks (TID 2 and 3) don't run until FirstUserTask exits, since they are of lower priority. The next task (TID 4) has higher priority and so completes execution before FirstUserTask gets scheduled again (wherein it prints the return code from the Create). FirstUserTask must get scheduled again in order for the netx task (TID 5) to be created. When it is created, it completes execution between FirstUserTask gets scheduled again.
+
+
+\end{document}
